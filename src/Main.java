@@ -1,9 +1,14 @@
-import java.util.Arrays;
+import java.util.*;
 
 public class Main {
+     private static Map<String , Long> cache;
     public static void main(String[] args) {
 
         int[] myBag = {
+                //0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 14, 17, 18, 19, 20, 23, 24, 25, 28, 31,
+               // 32, 33, 34, 35, 38, 39, 42, 45, 46, 47, 48, 49, 52
+                //**********
+                 0,
                 79,
                 142,
                 139,
@@ -108,6 +113,7 @@ public class Main {
                 110,
                 12,
                 152
+
         };
         Arrays.sort(myBag);
         int currentJolt = 0;
@@ -122,5 +128,36 @@ public class Main {
         System.out.print("there are "+ countOfOnes+" differences of 1 jolt and ");
         System.out.println(countofTree+" differences of 3 jolts");
         System.out.println("Answer:"+countOfOnes*countofTree);
+        cache =new HashMap<>();
+        List<Integer> list = new ArrayList<>();
+
+        for (int num: myBag){
+            list.add(num);
+        }int last = list.get(list.size()-1);
+        list.add(last+3);
+       long arragment = getArragment(list);
+        System.out.println("The total number distinict of "+arragment);
+    }
+
+   //this one no my code this is just for studies case
+
+    public static long getArragment(List<Integer> list){
+        if(list.size() ==1) return 1;
+        long arragment = 0;
+        int current = list.get(0);
+        int index = 1;
+        while(list.size()>index &&(list.get(index)-current)<4){
+            List<Integer> subList = list.subList(index,list.size());
+            String sublistStr = Arrays.toString(subList.toArray(new Integer[0]));
+            if(cache.containsKey(sublistStr)){
+                arragment+=cache.get(sublistStr);
+            }else{
+                long subArrangemnts = getArragment(subList);
+                cache.put(sublistStr,  subArrangemnts);
+                arragment+=subArrangemnts;
+            }
+            index++;
+        }
+        return arragment;
     }
 }
